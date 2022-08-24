@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import { Switch, Route, Redirect } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import PrivateRoute from "./components/PrivateRoute";
+import { useGlobalContext } from "./context";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
+  const {
+    state: { alerts, user, loading },
+  } = useGlobalContext();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar />
+      {alerts.length > 0 && (
+        <>
+          {alerts.map((alert) => {
+            return (
+              <div
+                key={alert.id}
+                id={`alert-${alert.type}`}
+                className="absolute bottom-8 border-2 border-white rounded-sm py-3 px-6 right-8"
+              >
+                {alert.msg}
+              </div>
+            );
+          })}
+        </>
+      )}
+      <Switch>
+        <Route exact path={"/"} component={HomePage} />
+        <Route exact path={"/login"}>
+          {user && !loading ? <Redirect to="/" /> : <LoginPage />}
+        </Route>
+        <PrivateRoute path={"/profile"} component={ProfilePage} />
+      </Switch>
+    </>
   );
 }
 
