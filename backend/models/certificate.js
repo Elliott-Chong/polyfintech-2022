@@ -15,6 +15,7 @@ const CertSchema = new mongoose.Schema({
   date_of_issue: {
     type: Date,
     required: true,
+    default: Date.now,
   },
 
   description: {
@@ -23,6 +24,13 @@ const CertSchema = new mongoose.Schema({
 
   expiry: {
     type: Date,
+  },
+  issuer: {
+    type: mongoose.Schema.Types.ObjectID,
+    ref: "user",
+  },
+  grade: {
+    type: String,
   },
 });
 module.exports = mongoose.model("certificate", CertSchema);

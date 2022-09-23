@@ -7,7 +7,7 @@ function HomePage() {
   const { loadUser } = useGlobalContext();
   React.useEffect(() => {
     loadUser();
-  }, []);
+  }, [loadUser]);
   return (
     <main className="text-white py-16">
       <div className="px-28 flex gap-8">

@@ -43,7 +43,7 @@ const Context = ({ children }) => {
     try {
       const response = await axios.post("/api/auth/login", body, config);
       dispatch({ type: "SET_TOKEN", payload: response.data.token });
-      history.push("/");
+      window.location.href = "/profile";
     } catch (error) {
       if (error.response.status === 401) {
         return setAlert("danger", "Invalid Credentials");
@@ -56,27 +56,39 @@ const Context = ({ children }) => {
     }
   };
 
+  const createCert = async (formData) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const body = JSON.stringify(formData);
+    try {
+      await axios.post("/api/certs/create", body, config);
+      window.location.href = "/";
+    } catch (error) {
+      error.response.data.errors.forEach((error) => {
+        setAlert("danger", error.msg);
+      });
+    }
+  };
+
   const logout = () => {
     dispatch({ type: "CLEAR_USER" });
     setAlert("success", "Logged Out!");
   };
-  const registerUser = async (
-    email,
-    username,
-    password,
-    password2,
-    history
-  ) => {
+  const registerUser = async (email, password, password2, name) => {
     const config = {
       headers: { "Content-Type": "application/json" },
     };
-    const body = JSON.stringify({ email, username, password, password2 });
+    const body = JSON.stringify({ email, password, password2, name });
     try {
       const response = await axios.post("/api/auth/register", body, config);
       setAlert("success", "Account Created!");
       dispatch({ type: "SET_TOKEN", payload: response.data.token });
       loadUser();
-      history.push("/login");
+      window.location.href = "/profile";
     } catch (error) {
       error.response.data.errors.forEach((error) => {
         setAlert("danger", error.msg);
@@ -148,7 +160,10 @@ const Context = ({ children }) => {
         state,
         dispatch,
         loginUser,
+        registerUser,
         loadUser,
+        logout,
+        createCert,
       }}
     >
       {children}

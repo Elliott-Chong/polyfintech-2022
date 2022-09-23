@@ -9,7 +9,7 @@ const PrivateRoute = ({ path, component: Component }) => {
   } = useGlobalContext();
   React.useEffect(() => {
     loadUser();
-  }, []);
+  }, [loadUser]);
   return (
     <Route
       path={path}

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useGlobalContext } from "../context";
 
 function Navbar() {
-  const { state } = useGlobalContext();
+  const { state, logout } = useGlobalContext();
   const { user } = state;
   return (
     <nav className="px-28 py-4 items-center flex">
@@ -11,20 +11,40 @@ function Navbar() {
         Portbonder
       </Link>
       <ul className="ml-auto flex items-center gap-4">
-        <li>
-          <Link className="nav-link" to="/all">
-            All
-          </Link>
-        </li>
-        <li>
-          <Link to="/profile" className="nav-link">
-            Profile
-          </Link>
-        </li>
-        {!user && (
+        {user && (
           <li>
-            <Link to="/login" className="nav-link">
-              Login
+            <Link to="/profile" className="nav-link">
+              Profile
+            </Link>
+          </li>
+        )}
+        {!user ? (
+          <>
+            <li>
+              <Link to="/login" className="nav-link">
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link to="/register" className="nav-link">
+                Register
+              </Link>
+            </li>
+          </>
+        ) : (
+          <>
+            <button
+              className="nav-link cursor-pointer"
+              onClick={() => logout()}
+            >
+              Logout
+            </button>
+          </>
+        )}
+        {user && user.organisation && (
+          <li>
+            <Link to="cert-creation" className="nav-link">
+              Register cert
             </Link>
           </li>
         )}

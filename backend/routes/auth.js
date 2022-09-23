@@ -56,4 +56,58 @@ router.post(
   }
 );
 
+router.post(
+  "/register",
+  body(
+    "password",
+    "Please enter a password with 6 or more characters"
+  ).isLength({ min: 6 }),
+  body("email", "Email is required").isEmail(),
+  body("password2", "Please confirm your password").not().isEmpty(),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    let { email, password, password2, name } = req.body;
+    if (password !== password2)
+      return res
+        .status(400)
+        .json({ errors: [{ msg: "Passwords do not match!" }] });
+
+    try {
+      let user = await User.findOne({ email });
+      if (user) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: "Email has been taken" }] });
+      }
+      user = new User({
+        name,
+        email,
+        organisation: false,
+        password,
+      });
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+
+      await user.save();
+      const payload = {
+        user: {
+          id: user.id,
+        },
+      };
+      jwt.sign(payload, "ilovesp", { expiresIn: 360000000 }, (err, token) => {
+        if (err) throw err;
+        return res.json({ token });
+      });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(400)
+        .json({ errors: [{ msg: "Server Error at line 62" }] });
+    }
+  }
+);
+
 module.exports = router;

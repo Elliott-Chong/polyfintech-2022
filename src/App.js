@@ -5,11 +5,18 @@ import { useGlobalContext } from "./context";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
+import CertCreationPage from "./pages/CertCreationPage";
+import RegisterPage from "./pages/RegisterPage";
+import React from "react";
 
 function App() {
   const {
     state: { alerts, user, loading },
+    loadUser,
   } = useGlobalContext();
+  React.useEffect(() => {
+    loadUser();
+  }, [loadUser]);
   return (
     <>
       <Navbar />
@@ -33,7 +40,11 @@ function App() {
         <Route exact path={"/login"}>
           {user && !loading ? <Redirect to="/" /> : <LoginPage />}
         </Route>
+        <Route exact path={"/register"}>
+          {user && !loading ? <Redirect to="/" /> : <RegisterPage />}
+        </Route>
         <PrivateRoute path={"/profile"} component={ProfilePage} />
+        <PrivateRoute path={"/cert-creation"} component={CertCreationPage} />
       </Switch>
     </>
   );
