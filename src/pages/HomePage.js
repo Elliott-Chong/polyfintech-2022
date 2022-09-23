@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../context";
-import undraw_bitcoin from "../images/undraw_bitcoin.svg";
+import klaytn_logo from "../images/klaytn-logo.png";
 
 function HomePage() {
   const { loadUser } = useGlobalContext();
@@ -37,8 +37,8 @@ function HomePage() {
         </div>
 
         <img
-          src={undraw_bitcoin}
-          className="w-[600px] max-h-[600px] brand-img"
+          src={klaytn_logo}
+          className="w-[600px] max-h-[600px] "
           alt="bitcoin iamge"
         />
       </div>
