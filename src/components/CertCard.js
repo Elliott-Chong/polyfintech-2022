@@ -2,7 +2,6 @@ import React from "react";
 
 function CertCard({ cert, organisation }) {
   const date_of_issue = new Date(cert.date_of_issue);
-  console.log(cert);
 
   return (
     <div className="border-2 border-white p-6 space-y-4">
